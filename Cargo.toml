@@ -1,0 +1,15 @@
+[package]
+name = "cue"
+version = "0.1.0"
+edition = "2024"
+description = "Play categorized audio cues from a sound library"
+license = "MIT"
+
+[dependencies]
+clap = { version = "4", features = ["derive"] }
+rodio = "0.19"
+serde = { version = "1", features = ["derive"] }
+toml = "0.8"
+directories = "5"
+thiserror = "2"
+rand = "0.8"
