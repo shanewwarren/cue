@@ -17,10 +17,16 @@ This directory contains specifications for the project's features and systems. E
 
 | Spec | Status | Purpose |
 |------|--------|---------|
-| [sound-archive.md](./sound-archive.md) | Planned | Discovering and indexing the sounds directory structure |
-| [playback.md](./playback.md) | Planned | Playing sound files with volume control |
-| [cli-interface.md](./cli-interface.md) | Planned | Commands: play, list, preview specific sounds |
-| [configuration.md](./configuration.md) | Planned | Config file with environment variable override |
+| [sound-archive.md](./sound-archive.md) | Implemented | Discovering and indexing the sounds directory structure |
+| [playback.md](./playback.md) | Implemented | Playing sound files with volume control |
+| [cli-interface.md](./cli-interface.md) | Implemented | Commands: play, list, preview specific sounds |
+| [configuration.md](./configuration.md) | Implemented | Config file with environment variable override |
+
+## Playback Control
+
+| Spec | Status | Purpose |
+|------|--------|---------|
+| [playback-suppression.md](./playback-suppression.md) | Implemented | Suppress sounds when meeting apps are running |
 
 ---
 

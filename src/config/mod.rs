@@ -15,12 +15,29 @@ pub enum ConfigError {
 #[derive(Debug, Deserialize)]
 pub struct Config {
     pub sounds_path: PathBuf,
+
+    /// List of process names that suppress playback
+    #[serde(default = "default_blocklist")]
+    pub blocklist: Vec<String>,
+}
+
+fn default_blocklist() -> Vec<String> {
+    vec![
+        "zoom".to_string(),
+        "teams".to_string(),
+        "webex".to_string(),
+        "slack".to_string(),
+        "discord".to_string(),
+        "facetime".to_string(),
+        "meet".to_string(),
+    ]
 }
 
 impl Default for Config {
     fn default() -> Self {
         Self {
             sounds_path: dirs_home().join(".cue").join("sounds"),
+            blocklist: default_blocklist(),
         }
     }
 }
@@ -36,6 +53,7 @@ impl Config {
             if !path.is_empty() {
                 return Ok(Self {
                     sounds_path: expand_tilde(&path),
+                    blocklist: default_blocklist(),
                 });
             }
         }

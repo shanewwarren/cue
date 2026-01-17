@@ -2,6 +2,7 @@ mod archive;
 mod cli;
 mod config;
 mod playback;
+mod suppression;
 mod upgrade;
 
 use archive::{ArchiveError, SoundArchive};
@@ -10,6 +11,7 @@ use cli::{Cli, Command};
 use config::Config;
 use playback::Player;
 use std::process::ExitCode;
+use suppression::{ProcessDetector, SuppressionResult};
 
 fn main() -> ExitCode {
     let cli = Cli::parse();
@@ -32,7 +34,22 @@ fn run(cli: Cli) -> Result<(), Box<dyn std::error::Error>> {
     let archive = SoundArchive::load(&config.sounds_path)?;
 
     match cli.command {
-        Command::Play { category, volume } => {
+        Command::Play {
+            category,
+            volume,
+            force,
+        } => {
+            // Check for blocking apps unless --force is set
+            if !force {
+                let mut detector = ProcessDetector::new();
+                if let SuppressionResult::Blocked { app_name } =
+                    detector.check_blocklist(&config.blocklist)
+                {
+                    println!("Skipped: {} is running", app_name);
+                    return Ok(());
+                }
+            }
+
             let cat = archive
                 .category(&category)
                 .ok_or_else(|| ArchiveError::CategoryNotFound(category.clone()))?;

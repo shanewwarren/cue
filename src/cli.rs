@@ -19,6 +19,10 @@ pub enum Command {
         /// Volume level 0-100+
         #[arg(short, long, default_value = "100")]
         volume: u32,
+
+        /// Bypass blocklist check and play anyway
+        #[arg(short, long)]
+        force: bool,
     },
 
     /// List available categories or sounds
