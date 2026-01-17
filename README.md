@@ -44,6 +44,12 @@ cue list <category>
 
 # Play a specific sound
 cue preview <category> <sound>
+
+# Check for updates
+cue upgrade --check
+
+# Upgrade to latest version
+cue upgrade
 ```
 
 ## Setup

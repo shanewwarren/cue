@@ -2,6 +2,7 @@ mod archive;
 mod cli;
 mod config;
 mod playback;
+mod upgrade;
 
 use archive::{ArchiveError, SoundArchive};
 use clap::Parser;
@@ -22,6 +23,11 @@ fn main() -> ExitCode {
 }
 
 fn run(cli: Cli) -> Result<(), Box<dyn std::error::Error>> {
+    // Handle upgrade separately (doesn't need config/archive)
+    if let Command::Upgrade { check } = cli.command {
+        return run_upgrade(check);
+    }
+
     let config = Config::load()?;
     let archive = SoundArchive::load(&config.sounds_path)?;
 
@@ -76,6 +82,33 @@ fn run(cli: Cli) -> Result<(), Box<dyn std::error::Error>> {
             let player = Player::new()?;
             let vol = volume as f32 / 100.0;
             player.play(&snd.path, vol)?;
+        }
+
+        Command::Upgrade { .. } => unreachable!(),
+    }
+
+    Ok(())
+}
+
+fn run_upgrade(check_only: bool) -> Result<(), Box<dyn std::error::Error>> {
+    if check_only {
+        let info = upgrade::check_for_update()?;
+
+        if info.has_update {
+            println!("Update available: v{} -> v{}", info.current, info.latest);
+            println!("Run 'cue upgrade' to install");
+        } else {
+            println!("Already up to date (v{})", info.current);
+        }
+    } else {
+        println!("Checking for updates...");
+
+        let info = upgrade::perform_upgrade()?;
+
+        if info.has_update {
+            println!("Upgraded: v{} -> v{}", info.current, info.latest);
+        } else {
+            println!("Already up to date (v{})", info.current);
         }
     }
 

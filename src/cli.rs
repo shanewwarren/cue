@@ -39,4 +39,11 @@ pub enum Command {
         #[arg(short, long, default_value = "100")]
         volume: u32,
     },
+
+    /// Upgrade to the latest version
+    Upgrade {
+        /// Only check for updates, don't install
+        #[arg(long)]
+        check: bool,
+    },
 }
